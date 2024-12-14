@@ -1,0 +1,83 @@
+_ unpack_order_data() inline {
+    var ds = get_data().begin_parse();
+    var res = (
+        ds~load_msg_addr(), ;; owner_address
+        ds~load_msg_addr(), ;; marketplace_address
+        ds~load_uint(256),  ;; merkle_root
+        ds~load_ref(),      ;; order_state_cell
+        ds~load_ref(),      ;; fees_cell
+        ds~load_ref()       ;; tokens_info_cell
+    );
+    ds.end_parse();
+    return res;
+}
+
+() pack_order_data(
+    slice owner_address,
+    slice marketplace_address,
+    int merkle_root,
+    cell order_state_cell,
+    cell fees_cell,
+    cell tokens_info
+) impure inline {
+    set_data(
+        begin_cell()
+            .store_slice(owner_address)
+            .store_slice(marketplace_address)
+            .store_uint(merkle_root, 256)
+            .store_ref(order_state_cell)
+            .store_ref(fees_cell)
+            .store_ref(tokens_info)
+        .end_cell()
+    );
+}
+
+_ unpack_order_state(cell state_cell) inline {
+    var ds = state_cell.begin_parse();
+    var res = (
+        ds~load_uint(3),  ;; state
+        ds~load_uint(32), ;; create_time
+        ds~load_uint(32), ;; end_time
+        ds~load_coins(),  ;; price_per_token
+        ds~load_coins(),  ;; collected_fee
+        ds~load_coins()   ;; collected_royalty
+    );
+    ds.end_parse();
+    return res;
+}
+
+cell pack_order_state(
+    int state, int create_time, int end_time,
+    int price_per_token,
+    int collected_fee, int collected_royalty
+) inline {
+    return begin_cell()
+        .store_uint(state, 3)
+        .store_uint(create_time, 32)
+        .store_uint(end_time, 32)
+        .store_coins(price_per_token)
+        .store_coins(collected_fee)
+        .store_coins(collected_royalty)
+    .end_cell();
+}
+
+_ unpack_order_fees(cell fees_cell) inline {
+    var ds = fees_cell.begin_parse();
+    var res = (
+        ds~load_msg_addr(), ;; mp_fee_addr
+        ds~load_coins(),    ;; mp_fee_amount
+        ds~load_msg_addr(), ;; royalty_address
+        ds~load_coins()     ;; royalty_amount
+    );
+    ds.end_parse();
+    return res;
+}
+
+;; _ unpack_tokens_info(cell tokens_info_cell) inline {
+;;     var ds = fees_cell.begin_parse();
+;;     var res = (
+;;         ds~load_msg_addr() ;; collection_address
+;;     );
+;;     ds.end_parse();
+;;     return res;
+;; }

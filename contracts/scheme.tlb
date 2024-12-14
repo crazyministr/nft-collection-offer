@@ -1,0 +1,26 @@
+order_state_cell$_ state: uint3
+                   create_time: uint32
+                   end_time: uint32
+                   price_per_token: Coins
+                   collected_fee: Coins
+                   collected_royalty: Coins = OrderStateCell;
+          
+fees_cell$_ mp_fee_address: MsgAddressInt
+            mp_fee_amount: Coins
+            royalty_address: MsgAddressInt
+            royalty_fee_amount: Coins = FeeCell;
+
+tokens_info_cell$_ collection_address: MsgAddressInt
+                   content:^Cell = TokensInfoCell;
+
+storage$_ owner_address: MsgAddressInt
+          marketplace_address: MsgAddressInt
+          merkle_root: uint256
+          order_state_cell: ^OrderStateCell
+          fees_cell: ^FeeCell
+          tokens_info_cell: ^TokensInfoCell = Storage;
+
+deploy$47b1b5c9 = InMsgBody
+cancel$839c4841 = InMsgBody
+nft_received$05138d91 query_id: uint64 prev_owner: MsgAddressInt
+    merkle_proof: ^Cell = NftReceived;

@@ -1,0 +1,48 @@
+const int state::active = 1;
+const int state::canceled = 2;
+const int state::completed = 3;
+
+;; Explanation of separated min_ton_for_storage on deploy and in progress
+;; The idea behind this: after every action such as send NFT and/or send TON, transaction will be paid separetly (by order smart contract balance).
+;; So, let separate min_ton_for_storage in order to prevent early termination of the smart contract
+
+;; It is meant to put a little more than this value on the contract. For example 0.5 TON
+const min_ton_for_storage::deploy = 400000000;        ;; 0.4 TON
+const min_ton_for_storage::in_progress = 150000000;   ;; 0.15 TON
+
+const nft_send_amount = 50000000;        ;; 0.05 TON
+const min_ton_nft_received = 100000000;  ;; 0.1 TON
+
+const int op::nft_cmd_transfer = 0x5fcc3d14;
+const int op::nft_cmd_get_static_data = 0x2fcb26a2;
+const int op::nft_cmd_edit_content = 0x1a0b9d51;
+const int op::nft_answer_ownership_assigned = 0x05138d91;
+const int op::nft_answer_excesses = 0xd53276db;
+
+const int op::deploy = "nft::order::deploy"c;  ;; 0x47b1b5c9
+const int op::cancel = "nft::order::cancel"c;  ;; 0x839c4841
+const int op::complete = "nft::order::complete"c;  ;; 0x25059f04
+const int op::fees = "nft::order:fees"c;  ;; 0x1d2d2a31
+const int op::profit = "nft::order::profit"c;  ;; 0x2030a7f2
+const int op::maintenance = 555;
+
+const int query_id::nft_return = "nft::order::return"c;  ;; 0x7214b23c
+const int query_id::nft_sold = "nft::order::sold"c;  ;; 0x8142c61d
+
+const int err::unknown_op = 0xffff;
+const int err::forbidden_cancel = 401;
+const int err::invalid_state = 402;
+const int err::invalid_data = 403;
+const int err::invalid_end_time = 404;
+const int err::invalid_workchain = 405;
+const int err::forbidden_topup = 406;
+const int err::invalid_owner = 407;
+
+slice msg::cancel() asm "<b 124 word cancel| $, b> <s PUSHSLICE";
+
+const int workchain = 0;
+
+() force_chain(slice addr) impure inline {
+    (int wc, _) = parse_std_addr(addr);
+    throw_unless(err::invalid_workchain, wc == workchain);
+}
