@@ -2,7 +2,7 @@
 
 ## TL-B Scheme
 
-- https://github.com/crazyministr/nft-order/blob/master/contracts/scheme.tlb
+- https://github.com/crazyministr/nft-collection-offer/blob/master/contracts/scheme.tlb
 
 - **NOTE:** `content:^Cell` should to be serialized same way as as [TEP-64](https://github.com/ton-blockchain/TEPs/blob/master/text/0064-token-data-standard.md) but metadata itself is different.
 
